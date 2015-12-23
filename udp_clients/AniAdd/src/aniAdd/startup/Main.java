@@ -28,6 +28,26 @@ public class Main {
     static JFrame frm = new JFrame();
     static AniAdd aniAdd;
 
+    private static class AOMOptions {
+        public static AOMOption username = new AOMOption("u", "username", "username", true);
+        public static AOMOption password = new AOMOption("p", "password", "password", true);
+        public static AOMOption noGui = new AOMOption(null, "no-gui", "Use cli instead of GUI.", false);
+        public static AOMOption help = new AOMOption("h", "help", "print this help message", false);
+        public static AOMOption config = new AOMOption("c", "config", "the path to the config file. Specified parameters will override values from the config file.", false);
+
+        public static Options toOptions() {
+            Options options = new Options();
+            options.addOption(AOMOptions.username.toOption());
+            options.addOption(AOMOptions.password.toOption());
+            options.addOption(AOMOptions.noGui.toOption());
+            options.addOption(AOMOptions.help.toOption());
+            options.addOption(AOMOptions.config.toOption());
+            return options;
+        }
+    }
+
+    private static Options sOptions = AOMOptions.toOptions();
+
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -38,18 +58,11 @@ public class Main {
         aniAdd = new AniAdd();
 
         // create Options object
-        Options options = new Options();
-
-        // add t option
-        options.addOption("u", "username", true, "username");
-        options.addOption("h", "help", false, "print this help message");
-        options.addOption("p", "password", true, "password");
-
         CommandLineParser parser = new DefaultParser();
         boolean printHelp = false;
         try {
-            CommandLine cmd = parser.parse(options, args);
-            printHelp = cmd.hasOption("h");
+            CommandLine cmd = parser.parse(sOptions, args);
+            printHelp = cmd.hasOption(AOMOptions.help.getName());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -57,9 +70,10 @@ public class Main {
         if (printHelp) {
             // automatically generate the help statement
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("aom", options);
+            formatter.printHelp("aom", sOptions);
             System.exit(0);
         }
+        System.exit(0);
 
         frm.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frm.addWindowListener(new WindowAdapter() {
