@@ -4,15 +4,19 @@ package aniAdd.startup;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
 import aniAdd.Modules.IModule;
 import aniAdd.*;
 import aniAdd.Communication.ComEvent;
 import gui.GUI;
+
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+
+import org.apache.commons.cli.*;
 import udpApi.Mod_UdpApi;
 
 /**
@@ -33,6 +37,29 @@ public class Main {
         /*try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception ex) { }*/
 
         aniAdd = new AniAdd();
+
+        // create Options object
+        Options options = new Options();
+
+        // add t option
+        options.addOption("u", "username", true, "username");
+        options.addOption("h", "help", false, "print this help message");
+
+        CommandLineParser parser = new DefaultParser();
+        boolean printHelp = false;
+        try {
+            CommandLine cmd = parser.parse(options, args);
+            printHelp = cmd.hasOption("h");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (printHelp) {
+            // automatically generate the help statement
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("aom", options);
+            System.exit(0);
+        }
 
         frm.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frm.addWindowListener(new WindowAdapter() {
