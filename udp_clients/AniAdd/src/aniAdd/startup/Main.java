@@ -20,7 +20,6 @@ import org.apache.commons.cli.*;
 import udpApi.Mod_UdpApi;
 
 /**
- *
  * @author Arokh
  */
 public class Main {
@@ -44,6 +43,7 @@ public class Main {
         // add t option
         options.addOption("u", "username", true, "username");
         options.addOption("h", "help", false, "print this help message");
+        options.addOption("p", "password", true, "password");
 
         CommandLineParser parser = new DefaultParser();
         boolean printHelp = false;
